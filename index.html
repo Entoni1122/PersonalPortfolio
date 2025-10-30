@@ -1,375 +1,341 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Entoni Portfolio</title>
+
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
     <style>
-        /* Stile generale */
-        body {
-            font-family:Verdana, Geneva, Tahoma, sans-serif;
-            background-color: #0D1117;
-            color:antiquewhite;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        :root{
+            --bg:#0D1117;
+            --card:#161b22;
+            --accent:#00b39a;
+            --muted:#d9e0e6;
+            --glass: rgba(255,255,255,0.04);
+            --radius:12px;
+            --transition:300ms cubic-bezier(.2,.9,.3,1);
+            --max-width:1200px;
+            --nav-purple: #2b0f3a; /* dark purple for navbar */
+            --nav-purple-light: #4b2b59; /* slightly lighter for light theme */
+        }
+        [data-theme="light"]{
+            --bg:#f7f7f8;
+            --card:#ffffff;
+            --accent:#00796b;
+            --muted:#0b1220;
+            color-scheme: light;
         }
 
-        .navbar {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            background-color: #009488;
-            width: 100%;
-            padding: 15px 0;
-            flex-wrap: wrap;
+        *{box-sizing:border-box}
+        html,body{height:100%}
+        body{
+            font-family:"Inter", Verdana, Geneva, Tahoma, sans-serif;
+            margin:0;
+            padding:0;
+            background:var(--bg);
+            color:var(--muted);
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+            transition:background var(--transition), color var(--transition);
         }
 
-        .horizontal-box {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 60px;
-            flex-wrap: wrap;
+        /* NAVBAR */
+        .navbar{
+            width:100%;
+            display:flex;
+            justify-content:center;
+            padding:12px 0;
+            position:sticky;
+            top:0;
+            z-index:60;
+            backdrop-filter: blur(6px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            background-color: var(--nav-purple); /* fixed purple background for contrast */
+        }
+        [data-theme="light"] .navbar{
+            background-color: var(--nav-purple-light);
         }
 
-        .horizontal-box a img {
-            width: 80px;
-            height: 70px;
-            transition: transform 0.3s;
-            object-fit: cover;
+        .nav-inner{width:100%;max-width:var(--max-width);display:flex;justify-content:space-between;align-items:center;padding:0 16px}
+        .horizontal-box{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+        .horizontal-box a img{width:56px;height:56px;border-radius:8px;object-fit:contain;transition:transform var(--transition);box-shadow:0 8px 20px var(--glass)}
+        .horizontal-box a img:hover{transform:translateY(-4px) scale(1.06)}
+
+        /* Theme toggle: visible contrast in both themes */
+        .theme-toggle{
+            background:transparent;
+            border:1px solid rgba(255,255,255,0.08);
+            color:var(--muted);
+            padding:8px 12px;
+            border-radius:10px;
+            cursor:pointer;
+            transition:all var(--transition);
+        }
+        /* When site is light, make the toggle darker so it doesn't disappear on light background */
+        [data-theme="light"] .theme-toggle{
+            background: rgba(0,0,0,0.08);
+            border-color: rgba(0,0,0,0.12);
+            color: var(--muted);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+        }
+        .theme-toggle:focus{outline:2px solid var(--accent);}
+
+        /* LAYOUT: main + skills sidebar */
+        .page-layout{width:100%;max-width:var(--max-width);display:grid;grid-template-columns: 1fr 280px;gap:22px;padding:20px;align-items:start}
+        @media (max-width:980px){
+            .page-layout{grid-template-columns:1fr; padding:12px}
         }
 
-        .horizontal-box a img:hover {
-            transform: scale(1.1);
+        .top-section{
+            display:flex;
+            gap:28px;
+            align-items:center;
+            justify-content:flex-start;
+            width:100%;
+            padding:6px 0 22px 0;
+            flex-wrap:wrap;
+            text-align:left;
         }
+        .top-section img{width:200px;height:200px;object-fit:cover;border-radius:50%;box-shadow:0 20px 40px rgba(0,0,0,0.6)}
+        .intro{font-size:clamp(18px,2.2vw,30px);font-weight:700;line-height:1.25}
 
-        .top-section {
-            display: flex;
-            align-items: center;
-            gap: 30px;
-            padding: 40px;
-            width: 100%;
-            max-width: 1400px;
-            flex-wrap: wrap;
-            justify-content: center;
-            text-align: center;
+        h1{font-size:clamp(20px,3.2vw,36px);margin:8px 0 6px 0;color:var(--muted)}
+        .textnormal{font-size:clamp(13px,1.4vw,17px);font-weight:500;color:var(--muted);margin:6px 0}
+
+        .container-main{background:transparent;padding:0;margin:0}
+        .card{background:var(--card);padding:16px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.45)}
+
+        .project-section{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;width:100%}
+        .project-box{background:var(--card);padding:16px;border-radius:var(--radius);display:flex;flex-direction:column;gap:12px;box-shadow:0 10px 26px rgba(0,0,0,0.4);transition:transform var(--transition), box-shadow var(--transition)}
+        .project-box:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(0,0,0,0.55)}
+        .project-box img{width:100%;height:180px;object-fit:cover;border-radius:10px;cursor:pointer;transition:transform var(--transition)}
+        .project-box img:active{transform:scale(.98)}
+        .project-box a{color:var(--accent);font-weight:700;text-decoration:none}
+
+        .horizontal-divider{width:100%;height:1px;background:rgba(255,255,255,0.04);margin:18px 0;border-radius:4px}
+
+        /* Skills sidebar */
+        .skills-sidebar{
+            position:sticky;
+            top:96px;
+            height: calc(100vh - 120px);
+            overflow:auto;
+            align-self:start;
         }
-
-        .top-section img {
-            width: 300px;
-            height: 300px;
-            object-fit: cover;
-            border-radius: 50%;
+        .skills-card{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,0.45);min-height:150px}
+        .skills-card h3{margin:0 0 10px 0;font-size:18px;color:var(--muted)}
+        .skill-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+        .skill-item{
+            display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,0.02);
+            font-weight:600;color:var(--muted);font-size:14px;
         }
+        .skill-tag{font-size:12px;background:rgba(0,0,0,0.06);padding:4px 8px;border-radius:8px;color:var(--muted)}
 
-        .divider {
-            width: 2px;
-            height: 300px;
-            background-color: antiquewhite;
-        }
+        /* reveal */
+        .reveal{opacity:0;transform:translateY(12px);transition:opacity 600ms ease, transform 600ms ease}
+        .reveal.visible{opacity:1;transform:none}
 
-        h1 {
-            font-size: 50px;
-            text-align: center;
-        }
-
-        .textnormal {
-            font-size: 22px;
-            font-weight: bold;
-            text-align: center;
-            margin: 10px 0;
-        }
-        .lefttext{
-            font-size: 15px;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-        .project-section {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            align-items: center;
-            width: 100%;
-            max-width: 1000px;
-            margin-top: 100px;
-        }
-
-        .project-box {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 20px;
-            width: 100%;
-            max-width: 800px;
-            padding: 20px;
-            border: 1px solid #ffffff20;
-            border-radius: 10px;
-            background-color: #161b22;
-            flex-wrap: wrap;
-        }
-
-        .project-box img {
-            width: 250px;
-            height: auto;
-            object-fit: cover;
-            border-radius: 10px;
-        }
-
-        .project-box a {
-            color: aliceblue;
-            font-size: 24px;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .horizontal-divider {
-            width: 50%;
-            height: 2px;
-            background-color: antiquewhite;
-            margin: 40px 0;
-        }
-        .maincolumn{
-            display: flex;
-            flex-direction: row;
-            align-items: start;
-            text-align: center;
-            gap: 20px;
-            width: 100%;
-            max-width: 1500px;
-            padding: 20px;
-        }
-        ul.skills {
-            flex: 1;
-            font-size: 16px;
-            list-style-type: disc;
-            margin: 0;
-            padding-left: 20px;
-            text-align: left;
-        }
-
-        ul.skills li {
-            margin-bottom: 5px;
-        }
-        /* Media Queries */
-        @media (max-width: 1024px) {
-            .divider {
-                display: none;
-            }
-
-            .top-section img {
-                width: 250px;
-                height: 250px;
-            }
-
-            .textnormal {
-                font-size: 16px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 40px;
-            }
-
-            .top-section {
-                flex-direction: column;
-                gap: 20px;
-            }
-
-            .top-section img {
-                width: 200px;
-                height: 200px;
-            }
-
-            .project-box img {
-                width: 100%;
-                max-width: 300px;
-            }
-
-            .textnormal {
-                font-size: 14px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 32px;
-            }
-
-            .textnormal {
-                font-size: 12px;
-            }
-
-            .horizontal-box a img {
-                width: 50px;
-                height: 50px;
-            }
+        @media (max-width:768px){
+            .top-section img{width:140px;height:140px}
+            .project-box img{height:160px}
+            .horizontal-box a img{width:44px;height:44px}
+            .nav-inner{padding:0 10px}
+            .skills-sidebar{position:relative;height:auto;top:0}
         }
     </style>
 </head>
-<body>
-
-    <!-- Navbar con loghi cliccabili -->
+<body data-theme="dark">
     <div class="navbar">
-        <div class="horizontal-box">
-            <a href="https://www.linkedin.com/in/entoni-shkalla-5bbb96255/" target="_blank">
-                <img src="PNGs/Linkedin.png" alt="Linkedin">
-            </a>
-            <a href="https://github.com/Entoni1122" target="_blank">
-                <img src="PNGs/GitHub-Logo.png" alt="GitHub">
-            </a>
-            <a href="https://entoni1122.itch.io/" target="_blank">
-                <img src="PNGs/itchlogonoback.png" alt="itch.io">
-            </a>
-            <a href="https://www.youtube.com/@entonishkalla818" target="_blank">
-                <img src="PNGs/YTBLack.png" alt="YouTube">
-            </a>
-        </div>
-    </div>
-
-    <!-- Introduzione -->
-    <div class="top-section">
-        <img src="PNGs/Foto.jpg" alt="Entoni">
-        <div class="divider"></div>
-        <div class="text" style="font-size: 30px;">
-            Hello I'm Entoni <br>and I'm a Game Programmer
-        </div>
-    </div>
-    <h1>Skills</h1>
-<div class="textnormal">
-    During my studies at AIV,
-    I gained experience in C++, C#, Unity, and Unreal Engine<br>
-    through various school projects, game jams,
-    and more recently, work-related projects.
-</div>
-
-<h1>Work Experience</h1>
-<div class="textnormal">
-    I recently completed the development of an MVP for an NFT-based mobile game using Unreal Blueprints and C++. <br>
-    </ul>
-</div>
-<div class="project-box">
-            <img src="PNGs/BlueDiscus.png" alt="Aquaticus">
-            <a href="https://www.youtube.com/watch?v=r1axekiZxNk" target="_blank"><u>Aquaticus project</u></a>
-            <div class="textnormal">
-                Modular Fish movement, cant show the game due to NDA,<br>
-                but you can click the link to watch the fish movement showcase
+        <div class="nav-inner">
+            <div class="horizontal-box" aria-hidden="false">
+                <a href="https://www.linkedin.com/in/entoni-shkalla-5bbb96255/" target="_blank" rel="noopener">
+                    <img src="PNGs/Linkedin.png" alt="LinkedIn" loading="lazy">
+                </a>
+                <a href="https://github.com/Entoni1122" target="_blank" rel="noopener">
+                    <img src="PNGs/GitHub-Logo.png" alt="GitHub" loading="lazy">
+                </a>
+                <a href="https://entoni1122.itch.io/" target="_blank" rel="noopener">
+                    <img src="PNGs/itchlogonoback.png" alt="itch.io" loading="lazy">
+                </a>
+                <a href="https://www.youtube.com/@entonishkalla818" target="_blank" rel="noopener">
+                    <img src="PNGs/YTBLack.png" alt="YouTube" loading="lazy">
+                </a>
             </div>
-            <ul class="skills">
-                <li>Full Fish Movement</li>
-        <li>Implementation of a chatbot inside the engine</li>
-        <li>Remake of the fishes bones and meshes in Blender to adapt with the fish movement</li>
-        <li>UI Design and programming</li>
-        <li>Mobile Optimization</li>
-        <li>Level and Audio Design</li>
-            </ul>
-</div>
-        <h1>Steam games</h1>
-        <div class="textnormal">
-            List of games published on steam.
+
+            <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
         </div>
-        <div class="project-section">
-            <div class="project-box">
-                <img src="PNGs/Anchor.jpg" alt="Anchor: Quest for Altantis">
-                <a href="https://store.steampowered.com/app/3247570/Anchor_Quest_for_Atlantis/" target="_blank"><u>Anchor: Quest for Altantis</u></a>
-                <div class="textnormal">
-                    Game made with a team of student inside AIV, it took about 2 years but i was in the team for about 6 month.I had the opportunity to work with amazing people and learn a lot.
+    </div>
+
+    <div class="page-layout">
+        <!-- Main content -->
+        <main class="container-main">
+            <section class="top-section reveal" aria-labelledby="intro-title">
+                <img src="PNGs/Foto.jpg" alt="Entoni portrait" loading="lazy">
+                <div>
+                    <h1 id="intro-title">Hi — I'm Entoni</h1>
+                    <div class="intro">Game Programmer • C++ · C# · Unity · Unreal</div>
+                    <div class="textnormal">I design and implement gameplay systems, UI, and VFX for small teams and game jams. Passionate about optimization for mobile and clean, maintainable code.</div>
                 </div>
-                <ul class="skills">
-                    <li>Adjust the player movement</li>
-                    <li>Tuning enemy behaviour</li>
-                    <li>Creating the 3d map in the UI</li>
+            </section>
+
+            <!-- Work Experience: only Freelance/Contract retained -->
+            <section class="card reveal" style="margin-top:12px;" aria-label="Work experience">
+                <h1 style="margin:0 0 8px 0;">Work Experience</h1>
+                <div class="textnormal" style="margin-bottom:12px;">
+                    Practical experience collaborating in small teams and on contract projects — focused on gameplay systems, UI, VFX and mobile optimisation.
+                </div>
+
+                <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px">
+                    <li style="display:flex;gap:12px;align-items:flex-start;">
+                        <a href="https://www.youtube.com/watch?v=r1axekiZxNk" target="_blank" rel="noopener" style="display:block;flex:0 0 96px;">
+                            <img src="PNGs/BlueDiscus.png" alt="Aquaticus showcase" style="width:96px;height:64px;object-fit:cover;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,0.35)" loading="lazy">
+                        </a>
+                        <div>
+                            <strong>Freelance / Contract — Game Programmer</strong>
+                            <div class="textnormal">Built an MVP mobile prototype using Unreal Engine (Blueprints & C++). Focused on gameplay systems, performance and mobile optimisation. <a href="https://www.youtube.com/watch?v=r1axekiZxNk" target="_blank" rel="noopener" style="color:var(--accent);font-weight:700;text-decoration:none;margin-left:6px">Watch showcase</a></div>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <div class="horizontal-divider"></div>
+
+            <section class="card reveal" aria-label="Steam games" style="margin-top:12px;">
+                <h1 style="margin:0 0 8px 0;">Featured Titles</h1>
+                <div class="textnormal" style="margin-bottom:12px;">Selected games I helped build and ship or showcased publicly.</div>
+
+                <div class="project-section">
+                    <div class="project-box">
+                        <img src="PNGs/Anchor.jpg" alt="Anchor: Quest for Atlantis" loading="lazy">
+                        <a href="https://store.steampowered.com/app/3247570/Anchor_Quest_for_Atlantis/" target="_blank" rel="noopener"><u>Anchor: Quest for Atlantis</u></a>
+                        <div class="textnormal">Team project: implemented player movement, balanced enemy behaviors, and designed a 3D UI map.</div>
+                    </div>
+
+                    <div class="project-box">
+                        <img src="PNGs/CoffeCV (1).png" alt="Coffee Break" loading="lazy">
+                        <a href="https://store.steampowered.com/app/3275870/Coffee_Break/" target="_blank" rel="noopener"><u>Coffee Break</u></a>
+                        <div class="textnormal">Jam winner: developed modular coffee machine mechanics and an interactive radio system.</div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="horizontal-divider"></div>
+
+            <section class="card reveal" aria-label="Personal projects" style="margin-top:12px;">
+                <h1 style="margin:0 0 8px 0;">Personal & Jam Projects</h1>
+                <div class="textnormal" style="margin-bottom:12px;">Small prototypes and school projects where I handled UI, movement, VFX, and level design.</div>
+
+                <div class="project-section">
+                    <div class="project-box">
+                        <img src="PNGs/WCW.png" alt="Wild Clone West" loading="lazy">
+                        <a href="https://entoni1122.itch.io/wildclonewest" target="_blank" rel="noopener"><u>Wild Clone West</u></a>
+                        <div class="textnormal">School project built in Unity — responsible for UI, player controls, shooting systems, and level layout.</div>
+                    </div>
+
+                    <div class="project-box">
+                        <img src="PNGs/Wachy.png" alt="Wachy Wheels" loading="lazy">
+                        <a href="https://www.linkedin.com/posts/entoni-shkalla-5bbb96255_small-mobile-game-made-with-alessandro-dottore-activity-7150443806369251329-C0HG" target="_blank" rel="noopener"><u>Wachy Wheels</u></a>
+                        <div class="textnormal">Mobile prototype: UI, pedestrian movement, VFX, and power-up mechanics.</div>
+                    </div>
+
+                    <div class="project-box">
+                        <img src="PNGs/7LY_6X.png" alt="Airport Delivery Guy" loading="lazy">
+                        <a href="https://entoni1122.itch.io/adg" target="_blank" rel="noopener"><u>Airport Delivery Guy</u></a>
+                        <div class="textnormal">Top-down delivery game for a jam — vehicle handling, stacking mechanics, and UI.</div>
+                    </div>
+
+                    <div class="project-box">
+                        <img src="PNGs/BattleSlot.png" alt="Battle Slot" loading="lazy">
+                        <a href="https://www.linkedin.com/posts/entoni-shkalla-5bbb96255_this-is-our-game-for-the-ggj2024-have-fun-activity-7157731285564637184-g7UG" target="_blank" rel="noopener"><u>Battle Slot</u></a>
+                        <div class="textnormal">GGJ2024 entry — slot mechanics and UI flow design.</div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="horizontal-divider"></div>
+
+            <section class="card reveal" style="margin-top:12px;">
+                <h2 style="margin:0 0 8px 0;">Contact</h2>
+                <div class="textnormal">For inquiries or collaborations: <strong style="font-weight:700">entonishkalla34@gmail.com</strong></div>
+            </section>
+        </main>
+
+        <!-- Skills sidebar (right) -->
+        <aside class="skills-sidebar">
+            <div class="skills-card reveal">
+                <h3>Core Skills</h3>
+                <ul class="skill-list">
+                    <li class="skill-item"><span>Programming</span><span class="skill-tag">C++, C#</span></li>
+                    <li class="skill-item"><span>Game Engines</span><span class="skill-tag">Unity · Unreal</span></li>
+                    <li class="skill-item"><span>Gameplay Systems</span><span class="skill-tag">Movement · AI · VFX</span></li>
+                    <li class="skill-item"><span>UI / UX</span><span class="skill-tag">Design & Implementation</span></li>
+                    <li class="skill-item"><span>Mobile Optimization</span><span class="skill-tag">Profiling · Memory</span></li>
+                    <li class="skill-item"><span>Version Control</span><span class="skill-tag">GitHub · Perforce</span></li>
+                    <li class="skill-item"><span>Art Tools (basic)</span><span class="skill-tag">Blender · Krita</span></li>
+                    <li class="skill-item"><span>Media Tools</span><span class="skill-tag">DaVinci Resolve · Audacity</span></li>
+                    <li class="skill-item"><span>Collaboration</span><span class="skill-tag">Trello · Miro</span></li>
+                    <li class="skill-item"><span>Other</span><span class="skill-tag">Shader Graph · VFX</span></li>
                 </ul>
             </div>
-            <div class="project-box">
-                <img src="PNGs/CoffeCV (1).png" alt="Coffee Break">
-                <a href="https://store.steampowered.com/app/3275870/Coffee_Break/" target="_blank"><u>Coffee Break</u></a>
-                <div class="textnormal">
-                    Coffee Break is an upcoming game on Steam, developed for a game jam that we won. Schools across Italy were challenged to create a functional game based on the theme 'space'. I contributed by developing all the mechanics of the coffee machine, designing the radio system that changes music based on the rotation of the crank, and implementing various in-game actions.
-                </div>
-                <ul class="skills">
-                    <li>Fully modular Coffe machine</li>
-                    <li>Modular radio</li>
-                </ul>
-            </div>
-        
-        </div>
-
-
-
-
-    <h1>Jams and Projects</h1>
-    <div class="textnormal">
-        Below you can find a list of my personal and <strong>school projects</strong>, as well as jams I have participated in.
+        </aside>
     </div>
 
-    <div class="project-section">
-        <div class="project-box">
-            <img src="PNGs/WCW.png" alt="Wild Clone West">
-            <a href="https://entoni1122.itch.io/wildclonewest" target="_blank"><u>Wild Clone West</u></a>
-            <div class="textnormal">
-                "It's a school project made in Unity for our final second-year exam. It was completed in one month with my academy friends. In this project, I was in charge of the UI, player movement, shooting system, and level design."
-            </div>
-            <ul class="skills">
-                <li>Full character locomotion</li>
-                <li>Basics of VFX and Shader Graph</li>
-                <li>UI Animations and Design</li>
-                <li>Shooting System</li>
-                <li>Level Design</li>
-            </ul>
-        </div>
-
-        <div class="project-box">
-            <img src="PNGs/Wachy.png" alt="Wachy Wheels">
-            <a href="https://www.linkedin.com/posts/entoni-shkalla-5bbb96255_small-mobile-game-made-with-alessandro-dottore-activity-7150443806369251329-C0HG?utm_source=share&utm_medium=member_desktop" target="_blank"><u>Wachy Wheels</u></a>
-            <div class="textnormal">
-                "Wachy is a personal project developed with a friend, designed for mobile. I was responsible for the UI, pedestrian movement, VFX, and power-up implementation."
-            </div>
-            <ul class="skills">
-                <li>Full character locomotion</li>
-                <li>Basics of VFX and Shader Graph</li>
-                <li>UI Animations and Design</li>
-                <li>Shooting System</li>
-                <li>Level Design</li>
-            </ul>
-        </div>
-
-        <div class="project-box">
-            <img src="PNGs/7LY_6X.png" alt="Airport Delivery Guy">
-            <a href="https://entoni1122.itch.io/adg" target="_blank"><u>Airport Delivery Guy</u></a>
-            <div class="textnormal">
-                "ADG was created for the Xplace Game Jam. I was responsible for player movement, stacking mechanic, vehicle implementation, and UI design."
-            </div>
-            <ul class="skills">
-                <li>Top down chatacyer Locomotion</li>
-                <li>Basics of rigging in blender</li>
-                <li>UI Design and implementation</li>
-                <li>Car Locomotion</li>
-            </ul>
-        </div>
-
-        <div class="project-box">
-            <img src="PNGs/BattleSlot.png" alt="Battle Slot">
-            <a href="https://www.linkedin.com/posts/entoni-shkalla-5bbb96255_this-is-our-game-for-the-ggj2024-have-fun-activity-7157731285564637184-g7UG?utm_source=share&utm_medium=member_desktop" target="_blank"><u>Battle Slot</u></a>
-            <div class="textnormal">
-                "Battle Slot is a game created for the 2024 Global Game Jam. We secured second place in our school's tournament with this project. I was responsible for the slot machine functionality and in-game actions."
-            </div>
-            <ul class="skills">
-                <li>How to work in a bigger team</li>
-                <li>Spefific in game Mechanics(Slot Machine, various actions)</li>
-                <li>UI</li>
-            </ul>
-        </div>
+    <!-- Lightbox -->
+    <div id="lightbox" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);align-items:center;justify-content:center;z-index:120;">
+        <img id="lightboxImg" src="" alt="Preview" style="max-width:92%;max-height:86%;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.7);">
     </div>
-    <!-- Contatti -->
-    <h2 class="textnormal" style="font-size: 32px;padding-top: 20px;">Contacts</h2>
-    <div class="horizontal-box">
-        <div class="lefttext">entonishkalla34@gmail.com</div>
 
+    <script>
+        // Theme toggle + persistence and button appearance text
+        (function(){
+            const btn = document.getElementById('themeToggle');
+            const root = document.body;
+            const saved = localStorage.getItem('theme');
+            if(saved) root.setAttribute('data-theme', saved);
+            // Set correct emoji on load
+            btn.textContent = root.getAttribute('data-theme') === 'light' ? '☀️' : '🌙';
+            btn.addEventListener('click', () => {
+                const current = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+                root.setAttribute('data-theme', current);
+                localStorage.setItem('theme', current);
+                btn.textContent = current === 'light' ? '☀️' : '🌙';
+            });
+        })();
+
+        // Reveal on scroll
+        (function(){
+            const io = new IntersectionObserver((entries)=>{
+                entries.forEach(e=>{
+                    if(e.isIntersecting) e.target.classList.add('visible');
+                });
+            }, {threshold: 0.12});
+            document.querySelectorAll('.reveal').forEach(el=> io.observe(el));
+        })();
+
+        // Lightbox
+        (function(){
+            const lb = document.getElementById('lightbox');
+            const lbImg = document.getElementById('lightboxImg');
+            document.querySelectorAll('.project-box img, .top-section img').forEach(img=>{
+                img.addEventListener('click', ()=> {
+                    lbImg.src = img.src;
+                    lb.style.display = 'flex';
+                });
+            });
+            lb.addEventListener('click', ()=> lb.style.display = 'none');
+            document.addEventListener('keydown', (e)=> { if(e.key === 'Escape') lb.style.display = 'none' });
+        })();
+
+        // Ensure lazy loading on existing images
+        document.querySelectorAll('img:not([loading])').forEach(img=> img.setAttribute('loading','lazy'));
+    </script>
 </body>
 </html>
